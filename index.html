@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Estúdio Monizy Silva</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+</head>
+<body>
+
+  <!-- LOGIN SCREEN -->
+  <div class="login-screen" id="loginScreen">
+
+    <div class="login-main">
+      <div class="login-card">
+        <h1 class="login-studio-name" id="loginBrandName">Studio Monizy Silva</h1>
+        <h2 class="login-card-title" id="loginCardTitle">Login</h2>
+
+        <div class="login-tabs">
+          <button class="login-tab active" id="tabLogin" data-tab="login">Entrar</button>
+          <button class="login-tab" id="tabRegister" data-tab="register">Criar Conta</button>
+        </div>
+
+        <!-- LOGIN FORM -->
+        <form class="login-form" id="formLogin" autocomplete="off">
+          <div class="login-field">
+            <label class="login-label">Nome de usuário</label>
+            <input type="text" id="loginUsername" class="login-input" placeholder="seu_usuario" required autocomplete="username" />
+          </div>
+          <div class="login-field">
+            <label class="login-label">Senha</label>
+            <div class="login-input-wrap">
+              <input type="password" id="loginSenha" class="login-input" placeholder="••••••••" required autocomplete="current-password" />
+              <button type="button" class="login-eye" id="loginEye" tabindex="-1">
+                <svg id="eyeIconLogin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="login-forgot-row">
+            <label class="login-remember">
+              <input type="checkbox" id="loginLembrar" />
+              <span>Lembre de mim</span>
+            </label>
+            <button type="button" class="login-forgot" id="btnEsqueceuSenha">Esqueceu a senha?</button>
+          </div>
+          <p class="login-error" id="loginError"></p>
+          <button type="submit" class="login-btn" id="loginBtn">Entrar</button>
+        </form>
+
+        <!-- REGISTER FORM -->
+        <form class="login-form hidden" id="formRegister" autocomplete="off">
+          <div class="login-field">
+            <label class="login-label">Nome completo</label>
+            <input type="text" id="registerNome" class="login-input" placeholder="Maria da Silva" required />
+          </div>
+          <div class="login-field">
+            <label class="login-label">Nome de usuário</label>
+            <input type="text" id="registerUsername" class="login-input" placeholder="maria_silva" required autocomplete="username" />
+          </div>
+          <div class="login-field">
+            <label class="login-label">Telefone</label>
+            <input type="tel" id="registerTelefone" class="login-input" placeholder="(11) 99999-9999" required />
+          </div>
+          <div class="login-field">
+            <label class="login-label">Senha</label>
+            <div class="login-input-wrap">
+              <input type="password" id="registerSenha" class="login-input" placeholder="Mínimo 6 caracteres" required autocomplete="new-password" />
+              <button type="button" class="login-eye" id="registerEye" tabindex="-1">
+                <svg id="eyeIconRegister" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="login-field">
+            <label class="login-label">Confirmar Senha</label>
+            <input type="password" id="registerConfirm" class="login-input" placeholder="Repita a senha" required />
+          </div>
+          <p class="login-error" id="registerError"></p>
+          <button type="submit" class="login-btn" id="registerBtn">Criar Conta</button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="app-layout" id="appLayout" style="display:none;">
+
+    <!-- BARRA LATERAL -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h1 class="sidebar-logo" id="sidebarLogo">Estúdio Monizy Silva</h1>
+      </div>
+      <nav class="sidebar-nav">
+        <ul>
+          <li><button class="nav-link active" data-page="home">Início</button></li>
+          <li><button class="nav-link" data-page="agenda">Agenda</button></li>
+          <li><button class="nav-link" data-page="clientes">Clientes</button></li>
+          <li><button class="nav-link" data-page="servicos">Serviços</button></li>
+        </ul>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="nav-link" data-page="configuracao">Configuração</button>
+        <button class="nav-link nav-link-logout" id="btnLogout">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Sair
+        </button>
+      </div>
+    </aside>
+
+    <!-- OVERLAY MOBILE -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- PRINCIPAL -->
+    <div class="main-wrapper">
+      <header class="top-header">
+        <button class="menu-toggle" id="menuToggle">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <h2 class="page-title" id="pageTitle">Início</h2>
+      </header>
+
+      <main class="main-content">
+
+         <!-- HOME -->
+        <section class="page active" id="page-home">
+          <div class="cards-grid">
+            <div class="card">
+              <div class="card-label">Agendamentos<br>Hoje</div>
+              <div class="card-value" id="cardAgendamentosHoje">0</div>
+            </div>
+            <div class="card">
+              <div class="card-label">Faturamento do Dia</div>
+              <div class="card-value fatura-value" id="cardFaturamentoDia">R$ 0,00</div>
+            </div>
+            <div class="card">
+              <div class="card-label">Clientes Atendidos</div>
+              <div class="card-value" id="cardClientesAtendidos">0</div>
+            </div>
+            <button class="card card-action" id="btnNovoAgendamentoHome">
+              <div class="card-label">Novo Agendamento</div>
+              <div class="card-value card-plus">+</div>
+            </button>
+          </div>
+
+          <div class="home-bottom-row">
+            <div class="proximos-section">
+              <h3 class="section-title">Próximos Agendamentos do Dia</h3>
+              <div id="proximosAgendamentos">
+                <p class="empty-msg">Nenhum agendamento para hoje.</p>
+              </div>
+            </div>
+            <div class="aniversariantes-section">
+              <h3 class="section-title">Aniversariantes do Mês</h3>
+              <div id="aniversariantesList">
+                <p class="empty-msg">Nenhum aniversário este mês.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- AGENDA -->
+        <section class="page" id="page-agenda">
+          <div class="page-header-row">
+            <h2 class="page-section-title">Agenda</h2>
+            <button class="btn-primary" id="btnNovoAgendamentoAgenda">+ Novo Agendamento</button>
+          </div>
+          <div class="calendar-bar">
+            <button class="cal-arrow" id="calPrev">&#8249;</button>
+            <div class="calendar-inner">
+              <div class="cal-month" id="calMonth"></div>
+              <div class="cal-days" id="calDays"></div>
+            </div>
+            <button class="cal-arrow" id="calNext">&#8250;</button>
+          </div>
+          <div class="calendar-controls">
+            <div class="calendar-controls-left">
+              <button class="btn-mostrar-todos" id="btnMostrarTodos">Mostrar Todos</button>
+              <span class="filter-date-label" id="filterDateLabel"></span>
+            </div>
+            <button class="btn-lembrete" id="btnEnviarLembrete">Enviar Lembrete</button>
+          </div>
+          <div id="agendaList">
+            <p class="empty-msg">Nenhum agendamento encontrado.</p>
+          </div>
+        </section>
+
+        <!-- CLIENTES -->
+        <section class="page" id="page-clientes">
+          <div class="page-header-row">
+            <h2 class="page-section-title">Clientes</h2>
+            <button class="btn-primary" id="btnNovoCliente">+ Novo Cliente</button>
+          </div>
+          <div class="list-container" id="clientesList">
+            <p class="empty-msg">Nenhum cliente cadastrado.</p>
+          </div>
+        </section>
+
+        <!-- SERVIÇOS -->
+        <section class="page" id="page-servicos">
+          <div class="page-header-row">
+            <h2 class="page-section-title">Serviços</h2>
+            <div style="display:flex;gap:10px;">
+              <button class="btn-primary" id="btnNovoServico">+ Novo Serviço</button>
+              <button class="btn-primary" id="btnNovoPacote">+ Novo Pacote</button>
+            </div>
+          </div>
+          <div class="list-container" id="servicosList">
+            <p class="empty-msg">Nenhum serviço cadastrado.</p>
+          </div>
+        </section>
+
+        <!-- CONFIGURAÇÃO -->
+        <section class="page" id="page-configuracao">
+          <div class="page-header-row">
+            <h2 class="page-section-title">Configuração</h2>
+          </div>
+
+          <!-- ABAS -->
+          <div class="cfg-tabs-bar">
+            <button class="cfg-tab active" data-cfg-tab="estudio">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              Estúdio
+            </button>
+            <button class="cfg-tab" data-cfg-tab="notificacoes">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              Notificações
+            </button>
+            <button class="cfg-tab" data-cfg-tab="conta">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Conta
+            </button>
+          </div>
+
+          <!-- PAINEL: ESTÚDIO -->
+          <div class="cfg-panel active" id="cfg-panel-estudio">
+            <div class="list-container">
+              <div class="cfg-section">
+                <div class="cfg-section-header">
+                  <div class="cfg-section-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                  </div>
+                  <div>
+                    <h3 class="cfg-section-title">Identidade do Estúdio</h3>
+                    <p class="cfg-section-sub">Nome exibido no sistema e na tela de login.</p>
+                  </div>
+                </div>
+                <div class="cfg-fields">
+                  <div class="form-field">
+                    <label class="form-label">Nome do Estúdio</label>
+                    <input type="text" id="configNomeStudio" class="form-input" placeholder="Ex: Estúdio Monizy Silva" />
+                  </div>
+                </div>
+                <div class="cfg-actions">
+                  <button class="btn-primary" id="btnSalvarConfig">Salvar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PAINEL: NOTIFICAÇÕES -->
+          <div class="cfg-panel" id="cfg-panel-notificacoes">
+            <div class="list-container">
+              <div class="cfg-section">
+                <div class="cfg-section-header">
+                  <div class="cfg-section-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  </div>
+                  <div>
+                    <h3 class="cfg-section-title">Mensagem de Lembrete (WhatsApp)</h3>
+                    <p class="cfg-section-sub">Texto enviado automaticamente para os clientes antes do agendamento.</p>
+                  </div>
+                </div>
+                <div class="cfg-tags-row">
+                  <span class="cfg-tag"><strong>{nome}</strong> — nome do cliente</span>
+                  <span class="cfg-tag"><strong>{servico}</strong> — serviço agendado</span>
+                  <span class="cfg-tag"><strong>{horario}</strong> — horário</span>
+                  <span class="cfg-tag"><strong>{data}</strong> — data</span>
+                </div>
+                <div class="cfg-fields">
+                  <div class="form-field">
+                    <label class="form-label">Mensagem</label>
+                    <textarea id="configMensagemLembrete" class="form-input" rows="5"
+                      placeholder="Ex: Olá {nome}, lembrando que você tem {servico} agendado para {data} às {horario}. Te esperamos!"></textarea>
+                  </div>
+                </div>
+                <div class="cfg-actions">
+                  <button class="btn-primary" id="btnSalvarLembrete">Salvar Mensagem</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PAINEL: CONTA -->
+          <div class="cfg-panel" id="cfg-panel-conta">
+            <div class="list-container">
+              <div class="cfg-section">
+
+                <!-- VIEW MODE -->
+                <div id="contaViewMode">
+                  <div class="cfg-section-header">
+                    <div class="cfg-section-icon">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    </div>
+                    <div style="flex:1;">
+                      <h3 class="cfg-section-title">Informações da Conta</h3>
+                      <p class="cfg-section-sub">Dados do seu cadastro de acesso ao sistema.</p>
+                    </div>
+                    <button class="btn-cfg-edit" id="btnEditarConta">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                      Editar
+                    </button>
+                  </div>
+                  <div class="cfg-info-grid">
+                    <div class="cfg-info-item">
+                      <span class="cfg-info-label">Nome completo</span>
+                      <span class="cfg-info-value" id="contaViewNome">—</span>
+                    </div>
+                    <div class="cfg-info-item">
+                      <span class="cfg-info-label">Telefone</span>
+                      <span class="cfg-info-value" id="contaViewTelefone">—</span>
+                    </div>
+                    <div class="cfg-info-item">
+                      <span class="cfg-info-label">Usuário</span>
+                      <span class="cfg-info-value" id="contaViewUsuario">—</span>
+                    </div>
+                    <div class="cfg-info-item">
+                      <span class="cfg-info-label">Senha</span>
+                      <span class="cfg-info-value cfg-senha-mask">••••••••••</span>
+                    </div>
+                  </div>
+
+                  <!-- ALTERAR SENHA (accordion) -->
+                  <div class="cfg-accordion">
+                    <button type="button" class="cfg-accordion-toggle" id="btnToggleSenha">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                      Alterar Senha
+                      <svg class="cfg-accordion-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+                    </button>
+                    <div class="cfg-accordion-body" id="accordionSenha">
+                      <div class="cfg-fields cfg-fields-2col" style="margin-top:16px;">
+                        <div class="form-field">
+                          <label class="form-label">Nova Senha</label>
+                          <div class="login-input-wrap">
+                            <input type="password" id="configNovaSenha" class="form-input" placeholder="Mínimo 6 caracteres" />
+                            <button type="button" class="login-eye" id="configEyeSenha" tabindex="-1">
+                              <svg id="configEyeSenhaIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            </button>
+                          </div>
+                        </div>
+                        <div class="form-field">
+                          <label class="form-label">Confirmar Nova Senha</label>
+                          <div class="login-input-wrap">
+                            <input type="password" id="configConfirmaSenha" class="form-input" placeholder="Repita a nova senha" />
+                            <button type="button" class="login-eye" id="configEyeConfirma" tabindex="-1">
+                              <svg id="configEyeConfirmaIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="cfg-actions" style="margin-top:4px;">
+                        <button class="btn-primary" id="btnSalvarLogin">Salvar Nova Senha</button>
+                        <p class="cfg-msg" id="configLoginMsg"></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- EDIT MODE -->
+                <div id="contaEditMode" style="display:none;">
+                  <div class="cfg-section-header">
+                    <div class="cfg-section-icon">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    </div>
+                    <div>
+                      <h3 class="cfg-section-title">Editar Informações</h3>
+                      <p class="cfg-section-sub">Atualize seus dados de cadastro.</p>
+                    </div>
+                  </div>
+                  <div class="cfg-fields cfg-fields-2col">
+                    <div class="form-field">
+                      <label class="form-label">Nome completo</label>
+                      <input type="text" id="configNome" class="form-input" placeholder="Maria da Silva" />
+                    </div>
+                    <div class="form-field">
+                      <label class="form-label">Telefone</label>
+                      <input type="tel" id="configTelefone" class="form-input" placeholder="(11) 99999-9999" />
+                    </div>
+                  </div>
+                  <div class="cfg-fields" style="margin-top:0;">
+                    <div class="form-field" style="max-width:320px;">
+                      <label class="form-label">Nome de usuário</label>
+                      <input type="text" id="configUsername" class="form-input" placeholder="ex: maria_silva" autocomplete="off" />
+                      <p class="form-hint" style="margin-top:4px;font-size:11px;color:var(--text-muted);">Somente letras, números e _. Deve ser único.</p>
+                    </div>
+                  </div>
+                  <div class="cfg-actions">
+                    <button class="btn-primary" id="btnSalvarConta">Salvar Alterações</button>
+                    <button class="btn-secondary" id="btnCancelarEditConta">Cancelar</button>
+                    <p class="cfg-msg" id="configContaMsg"></p>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- OVERLAY MODAL -->
+  <div class="modal-overlay" id="modalOverlay"></div>
+
+  <!-- MODAL: AGENDAMENTO -->
+  <div class="modal modal-lg" id="modalAgendamento">
+    <h2 class="modal-title" id="modalAgendamentoTitle">Novo Agendamento</h2>
+    <hr class="modal-divider" />
+    <form id="formAgendamento" autocomplete="off">
+      <input type="hidden" id="agendamentoId" />
+
+      <div class="form-group">
+        <label class="form-label">Nome do Cliente</label>
+        <div class="autocomplete-wrapper">
+          <input type="text" id="agendamentoCliente" class="form-input" autocomplete="off" />
+          <ul class="suggestions-list" id="clienteSuggestions"></ul>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Serviços</label>
+        <div id="agLinhasContainer"></div>
+        <button type="button" class="btn-add-servico" id="btnAddServicoLinha">+ Adicionar outro serviço</button>
+      </div>
+
+      <div class="form-group-row">
+        <div>
+          <label class="form-label">Data</label>
+          <input type="date" id="agendamentoData" class="form-input form-select" />
+        </div>
+        <div>
+          <label class="form-label">Horário</label>
+          <select id="agendamentoHorario" class="form-input form-select">
+            <option value="">Selecione o horário</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="submit" class="btn-save">Salvar</button>
+        <button type="button" class="btn-cancel" id="btnCancelAgendamento">Cancelar</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- MODAL: CLIENTE -->
+  <div class="modal" id="modalCliente">
+    <h2 class="modal-title" id="modalClienteTitle">Novo Cliente</h2>
+    <hr class="modal-divider" />
+    <form id="formCliente">
+      <input type="hidden" id="clienteId" />
+      <div class="form-group">
+        <label class="form-label">Nome do Cliente</label>
+        <input type="text" id="clienteNome" class="form-input" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Data de Nascimento</label>
+        <input type="date" id="clienteNascimento" class="form-input form-select" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Telefone</label>
+        <input type="tel" id="clienteTelefone" class="form-input" placeholder="(00) 00000-0000" />
+      </div>
+      <div class="modal-actions">
+        <button type="submit" class="btn-save">Salvar</button>
+        <button type="button" class="btn-cancel" id="btnCancelCliente">Cancelar</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- MODAL: VER CLIENTE -->
+  <div class="modal modal-lg" id="modalVerCliente">
+    <h2 class="modal-title">Detalhes do Cliente</h2>
+    <hr class="modal-divider" />
+    <div id="verClienteContent" class="ver-content"></div>
+    <div class="modal-actions" style="margin-top:24px;">
+      <button type="button" class="btn-cancel" id="btnFecharVerCliente">Fechar</button>
+    </div>
+  </div>
+
+  <!-- MODAL: SERVIÇO -->
+  <div class="modal" id="modalServico">
+    <h2 class="modal-title" id="modalServicoTitle">Novo Serviço</h2>
+    <hr class="modal-divider" />
+    <form id="formServico">
+      <input type="hidden" id="servicoId" />
+      <div class="form-group">
+        <label class="form-label">Nome do Serviço</label>
+        <input type="text" id="servicoNome" class="form-input" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Valor (R$)</label>
+        <input type="text" id="servicoValor" class="form-input" placeholder="0,00" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tempo Estimado</label>
+        <input type="text" id="servicoTempo" class="form-input" placeholder="Ex: Aproximadamente 1h" />
+      </div>
+      <div class="modal-actions">
+        <button type="submit" class="btn-save">Salvar</button>
+        <button type="button" class="btn-cancel" id="btnCancelServico">Cancelar</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- MODAL: PACOTE -->
+  <div class="modal" id="modalPacote">
+    <h2 class="modal-title" id="modalPacoteTitle">Novo Pacote</h2>
+    <hr class="modal-divider" />
+    <form id="formPacote">
+      <input type="hidden" id="pacoteId" />
+      <div class="form-group">
+        <label class="form-label">Nome do Pacote</label>
+        <input type="text" id="pacoteNome" class="form-input" placeholder="Ex: Pacote Completo" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Valor (R$)</label>
+        <input type="text" id="pacoteValor" class="form-input" placeholder="0,00" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Serviços do Pacote</label>
+        <div id="pacoteServicosLista"></div>
+        <button type="button" class="btn-add-servico" id="btnAddServicoAoPacote">+ Adicionar serviço</button>
+      </div>
+      <div class="modal-actions">
+        <button type="submit" class="btn-save">Salvar</button>
+        <button type="button" class="btn-cancel" id="btnCancelPacote">Cancelar</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- MODAL: LEMBRETES WHATSAPP -->
+  <div class="modal modal-lg" id="modalLembretes">
+    <h2 class="modal-title">Enviar Lembretes via WhatsApp</h2>
+    <hr class="modal-divider" />
+    <p class="lembrete-modal-desc" id="lembreteDateLabel"></p>
+    <div id="lembretesListaModal" class="lembretes-lista"></div>
+    <div class="modal-actions" style="margin-top:20px;">
+      <button type="button" class="btn-cancel" id="btnFecharLembretes">Fechar</button>
+    </div>
+  </div>
+
+  <!-- MODAL: CONFIRMAÇÃO -->
+  <div class="modal modal-sm" id="modalConfirm">
+    <h2 class="modal-title">Confirmar Exclusão</h2>
+    <hr class="modal-divider" />
+    <p id="confirmMessage" class="confirm-msg">Deseja realmente excluir este item?</p>
+    <div class="modal-actions">
+      <button type="button" class="btn-delete-confirm" id="btnConfirmDelete">Excluir</button>
+      <button type="button" class="btn-cancel" id="btnCancelDelete">Cancelar</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
