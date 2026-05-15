@@ -3,7 +3,7 @@
    Supabase vanilla JS + full app logic
 ═══════════════════════════════════════════════ */
 
-const SUPABASE_URL = 'https://klihykdichgelwxljntr.supabase.co';
+const SUPABASE_URL = 'https://klihykdichgelwxljntr.supabase.co/rest/v1/';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtsaWh5a2RpY2hnZWx3eGxqbnRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4NTI2MjMsImV4cCI6MjA5NDQyODYyM30.HB15l6rfItzkql7MFFIHO6XOe9rAfmIiXONbxJV423I';
 
 /* ── SUPABASE CLIENT ── */
